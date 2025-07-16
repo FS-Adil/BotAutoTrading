@@ -1,0 +1,74 @@
+pipeline {
+    agent any
+
+
+    stages {
+        
+        stage('Delete workspace befor build starts') {
+            steps {
+                echo 'Deleting workspace'
+                deleteDir()
+                
+                sh 'pwd'
+                sh 'ls -la'
+            }
+        }
+        
+        stage('Git clone repositorie') {
+            steps {
+                git branch: 'release/01.001.00',
+                    url:  'https://github.com/FS-Adil/BotAutoTrading.git'
+            }
+        }
+        
+        stage('Info') {
+            steps {
+                sh 'pwd'
+                sh 'ls -la'
+                
+                dir('Web3BotAT/web3botat') {
+                    sh 'pwd'
+                    sh 'ls -la'
+                }
+            }
+        }
+        
+        
+        stage('Build React project') {
+            steps {
+                dir('Web3BotAT/web3botat') {
+                    sh 'node -v'
+                    sh 'npm -v'
+                    
+                    sh 'npm install'
+                    
+                    sh 'ls -la'
+                    
+                    sh 'npm run build'
+                }
+            }
+        }
+        
+        stage('Docker build') {
+            steps {
+                dir('Web3BotAT/web3botat') {
+                    sh 'docker build -t adilhan/web3botat:01.001.00 .'
+                }
+            }
+        }
+        
+        stage('Push') {
+            steps {
+                withDockerRegistry(credentialsId: 'dockerhub-cred-adilhan', url: 'https://index.docker.io/v1/') {
+                    sh 'docker push adilhan/web3botat:01.001.00'
+                }
+            }
+        }
+        
+        stage('Delete docker image locale') {
+            steps {
+                sh 'docker rmi adilhan/web3botat:01.001.00'
+            }
+        }
+    }
+}
