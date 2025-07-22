@@ -16,7 +16,7 @@ pipeline {
         
         stage('Git clone repositorie') {
             steps {
-                git branch: 'release/01.001.00',
+                git branch: 'release/01.002.00',
                     url:  'https://github.com/FS-Adil/BotAutoTrading.git'
             }
         }
@@ -52,7 +52,7 @@ pipeline {
         stage('Docker build') {
             steps {
                 dir('Web3BotAT/web3botat') {
-                    sh 'docker build -t adilhan/web3botat:01.001.00 .'
+                    sh 'docker build -t adilhan/web3botat:01.002.00 .'
                 }
             }
         }
@@ -60,14 +60,14 @@ pipeline {
         stage('Push') {
             steps {
                 withDockerRegistry(credentialsId: 'dockerhub-cred-adilhan', url: 'https://index.docker.io/v1/') {
-                    sh 'docker push adilhan/web3botat:01.001.00'
+                    sh 'docker push adilhan/web3botat:01.002.00'
                 }
             }
         }
         
         stage('Delete docker image locale') {
             steps {
-                sh 'docker rmi adilhan/web3botat:01.001.00'
+                sh 'docker rmi adilhan/web3botat:01.002.00'
             }
         }
     }
