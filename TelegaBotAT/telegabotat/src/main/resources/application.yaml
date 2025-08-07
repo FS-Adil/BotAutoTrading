@@ -3,7 +3,7 @@ server:
 
 app:
   bot:
-    token: '8159929863:AAFWMYpkCkjcfhAX2wGE7JJXbLlabRC0I3o'
+    token: ''
     name: 'BotAutoTrading'
 
 spring:
