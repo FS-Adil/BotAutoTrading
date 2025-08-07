@@ -11,9 +11,9 @@ spring:
     name: "telegabotat"
 
   datasource:
-    url: jdbc:postgresql://93.189.230.154:5432/telegabotbd
-    username: telegabotbd
-    password: telegabotbdadil
+    url: ''
+    username: ''
+    password: ''
     driverClassName: org.postgresql.Driver
 
   jpa:
