@@ -1,0 +1,78 @@
+pipeline {
+    agent any
+    
+    environment {
+        RELEASE_VERSION = '01.003.00'
+    }
+
+    stages {
+        
+        stage('Delete workspace befor build starts') {
+            steps {
+                echo 'Deleting workspace'
+                deleteDir()
+                
+                sh 'pwd'
+                sh 'ls -la'
+            }
+        }
+        
+        stage('Git clone repositorie') {
+            steps {
+                git branch: "release/${RELEASE_VERSION}",
+                    url:  'https://github.com/FS-Adil/BotAutoTrading.git'
+            }
+        }
+        
+        stage('Info') {
+            steps {
+                sh 'pwd'
+                sh 'ls -la'
+                
+                dir('TelegaBotAT/telegabotat') {
+                    sh 'pwd'
+                    sh 'ls -la'
+                }
+            }
+        }
+        
+        
+        stage('Build Spring Boot project') {
+            steps {
+                dir('TelegaBotAT/telegabotat') {
+                    
+                    sh 'javac -version'
+                    sh 'java -version'
+                    
+                    sh './mvnw -v'
+                    
+                    sh './mvnw clean'
+                    
+                    sh './mvnw package'
+                }
+            }
+        }
+        
+        stage('Docker build') {
+            steps {
+                dir('TelegaBotAT/telegabotat') {
+                    sh "docker build -t adilhan/telegabotat:${RELEASE_VERSION} ."
+                }
+            }
+        }
+        
+        stage('Push') {
+            steps {
+                withDockerRegistry(credentialsId: 'dockerhub-cred-adilhan', url: 'https://index.docker.io/v1/') {
+                    sh "docker push adilhan/telegabotat:${RELEASE_VERSION}"
+                }
+            }
+        }
+        
+        stage('Delete docker image locale') {
+            steps {
+                sh "docker rmi adilhan/telegabotat:${RELEASE_VERSION}"
+            }
+        }
+    }
+}
