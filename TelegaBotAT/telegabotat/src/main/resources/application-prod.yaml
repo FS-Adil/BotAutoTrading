@@ -7,6 +7,10 @@ app:
     name: ''
 
 spring:
+
+  profiles:
+    active: prod
+
   application:
     name: "telegabotat"
 
