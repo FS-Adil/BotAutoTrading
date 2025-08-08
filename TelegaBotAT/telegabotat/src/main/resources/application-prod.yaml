@@ -1,19 +1,20 @@
 server:
-  port: 8484
+  port: 8181
 
 app:
   bot:
-    token: ''
-    name: ''
+    token: '8159929863:'
+    name: 'sfasdfa'
 
 spring:
+
   application:
     name: "telegabotat"
 
   datasource:
-    url: ''
-    username: ''
-    password: ''
+    url: 'sfasdf'
+    username: 'asdfas'
+    password: 'adfasf'
     driverClassName: org.postgresql.Driver
 
   jpa:
